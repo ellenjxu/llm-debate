@@ -1,5 +1,3 @@
-# modified from llm_multiagent_debate/gen_math.py
-
 # import openai
 import os
 import json
@@ -50,7 +48,8 @@ def generate_answer(answer_context):
     # return completion
 
     model_inputs = tokenizer.apply_chat_template(answer_context, return_tensors="pt", padding=True, return_attention_mask=True, truncation=True)
-    outputs = model.generate(model_inputs.to(device), max_length=512, do_sample=True, pad_token_id=model.config.eos_token_id) 
+    
+    outputs = model.generate(model_inputs.to(device), max_length=8192, do_sample=True, pad_token_id=model.config.eos_token_id) 
     outputs = tokenizer.batch_decode(outputs, skip_special_tokens=True, clean_up_tokenization_spaces=True)
     
     answer = outputs[0].split("[/INST]")[-1].strip()
@@ -108,18 +107,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--agents", type=int, default=2)
     parser.add_argument("--rounds", type=int, default=3)
-    parser.add_argument("--evaluation_round", type=int, default=100)
+    parser.add_argument("--evals", type=int, default=100)
     args = parser.parse_args()
 
     agents = args.agents
     rounds = args.rounds
     np.random.seed(0)
 
-    evaluation_round = args.evaluation_round
+    evaluation_round = args.evals
     scores = []
 
     generated_description = {}
     performance = []
+
+    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
+    output_dir = "output/{}".format(timestamp)
 
     for round in tqdm(range(evaluation_round)):
         a, b, c, d, e, f = np.random.randint(0, 30, size=6)
@@ -176,14 +178,11 @@ if __name__ == "__main__":
         performance.append(f"{a}+{b}*{c}+{d}-{e}*{f},{answer},{text_answer}")
         performance.append(f"{np.mean(scores)},{np.std(scores) / (len(scores) ** 0.5)}")
 
-    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
-    output_dir = "output/{}".format(timestamp)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open("output/{}/math_agents{}_rounds{}.txt".format(timestamp, agents, rounds), "w") as f:
+    with open(os.path.join(output_dir, "math_agents{}_rounds{}.txt".format(agents, rounds)), "w") as f:
         for p in performance:
             f.write("{}\n".format(p))
-    f.close()
 
-    pickle.dump(generated_description, open("math_agents{}_rounds{}.p".format(agents, rounds), "wb"))
+    pickle.dump(generated_description, open(os.path.join(output_dir, "math_agents{}_rounds{}.p".format(agents, rounds)), "wb"))
