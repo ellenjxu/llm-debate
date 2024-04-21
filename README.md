@@ -11,13 +11,19 @@ To reproduce the figure in original paper (scaling with rounds and agents):
 
 `gen_math_panel.py` and `./gen_math.sh` are modified to run a panel experiment with multiple different HuggingFace models. Models are specified from a list of available options by passing in indices as command line arguments.
 
-## Original
+## Scaling agents and rounds
 
 ![image](https://github.com/ellenjxu/llm-debate/assets/56745453/bc784d3e-49d9-4c37-bc3e-e2bc99f5b345)
 
-## Reproduced figures
+Reproduced figures
 
 ![image](https://github.com/ellenjxu/llm-debate/assets/56745453/cb7763e6-7827-496f-8e7c-959a2a57392a)
+
+## Panel experiment
+
+Testing with diverse panel of HuggingFace open source models
+![image](https://github.com/ellenjxu/llm-debate/assets/56745453/3d48d666-0059-4ff8-9d2b-6feb704bf580)
+
 
 ---
 
