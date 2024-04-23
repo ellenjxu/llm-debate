@@ -24,6 +24,11 @@ Reproduced figures
 Testing with diverse panel of HuggingFace open source models
 ![image](https://github.com/ellenjxu/llm-debate/assets/56745453/3d48d666-0059-4ff8-9d2b-6feb704bf580)
 
+| model            | Arithmetic (%) | std |
+| ---------------- | ------ | --------- |
+| Single Agent (Mistral) | 16 | 7.3    |
+| Single Agent Panel (Mistral)           | 28 | 8.9    |
+| Multi Agent Panel           | 24 | 8.5    |
 
 ---
 
